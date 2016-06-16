@@ -1,0 +1,73 @@
+controller_frequency: 5.0
+recovery_behaviour_enabled: true
+
+NavfnROS:
+  allow_unknown: false
+  default_tolerance: 0.1
+
+TrajectoryPlannerROS:
+  #Robot Configuration Parameters
+  acc_lim_x: 1.0
+  acc_lim_y: 1.0
+  acc_lim_theta: 2.5
+
+  max_vel_x: 0.3
+  min_vel_x: 0.05
+
+  max_vel_theta: 1.0
+  min_in_place_vel_theta: 0.2
+
+  holonomic_robot: false
+  escape_vel: -0.1
+
+  # Goal Tolerance Parameters
+  yaw_goal_tolerance: 0.1
+  xy_goal_tolerance: 0.2
+  latch_xy_goal_tolerance: false
+
+  # Forward Simulation Parameters
+  sim_time: 2.0
+  sim_granularity: 0.02
+  angular_sim_granularity: 0.02
+  vx_samples: 6
+  vtheta_samples: 20
+  controller_frequency: 20.0
+
+  # Trajectory Scoring Parameters
+  meter_scoring: true
+  occdist_scale: 0.001 #how much the controller should attemp to avoid obstacles default (0.01)
+  pdist_scale: 0.3 # attempt to should stay close to its path default (0.6)
+  gdist_scale: 0.4 # attempt to reach its goal default (0.8)
+
+  heading_lookahead: 0.425 #How far to look ahead in meters when scoring in different in-place-rotation trajectories
+  heading_scoring: false #wheather to score based on the robot's heading to the path or its distance from the path, default false
+  heading_scoring_timestep: 0.8 #How far to look ahead in time in seconds along the simulated trajectory when using heading scoring (double, default 0.8)
+  dwa: true #whether to use the Dynamic Window Approach (DWA)_ or whether to use Trajectory Rollout
+  simple_attractor: false
+  publish_cost_grid_pc: true
+
+  # Oscillation Prevention Parameters
+  oscillation_reset_dist: 0.25 #How far the robot must travel in meters befor oscillation flags are reset
+  escape_reset_dist: 0.1
+  escape_reset_theta: 0.1
+
+DWAPlannerROS:
+# Robot configuration parameters
+  acc_lim_x: 1.0
+  acc_lim_y: 1.0
+  acc_lim_theta: 2.5
+
+  max_vel_x: 0.3
+  min_vel_x: 0.05
+  max_vel_y: 0
+  min_vel_y: 0
+
+  max_trans_vel: 0.5
+  min_trans_vel: 0.1
+  max_rot_vel: 1.0
+  min_rot_vel: 0.2
+
+  # Goal Tolerance Parameters
+  yaw_goal_tolerance: 0.1
+  xy_goal_tolerance: 0.2
+  latch_xy_goal_tolerance: false

@@ -1,0 +1,7 @@
+<launch>
+  <!-- Upload arduino code -->
+  <node pkg="goto_odroid" type="uploadingcodeUno.sh" name="uploadingArduinoCodeUno"/>
+  <node pkg="goto_odroid" type="timed_roslaunch.sh" name="timed_roslaunch" args="3.5" />
+  <node pkg="goto_odroid" type="uploadingcodeMega.sh" name="uploadingArduinoCodeMega"/>  
+  <node pkg="goto_odroid" type="timed_roslaunch.sh" name="timed_roslaunch2" args="4.0 $(find goto_odroid)/launch/wc_odroid.launch"/>
+</launch>

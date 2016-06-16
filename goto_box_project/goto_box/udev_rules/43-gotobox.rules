@@ -1,0 +1,1 @@
+KERNEL=="ttyACM?" ATTRS{manufacturer}=="Arduino (www.arduino.cc)" ATTRS{serial}=="55330313735351809122" SYMLINK+="goto_box_usb"

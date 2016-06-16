@@ -1,0 +1,1 @@
+KERNEL=="ttyACM?" ATTRS{manufacturer}=="Hokuyo Data Flex for USB" ATTRS{product}=="URG-Series USB Driver" SYMLINK+="usb_hokuyo"

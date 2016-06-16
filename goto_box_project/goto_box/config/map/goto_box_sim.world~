@@ -1,0 +1,78 @@
+define topurg ranger
+(
+#changed the laser sensor model below, it would not work on stage fuerte ...?
+# laser(
+ #  range_max 30.0
+ #   fov 180
+ #   samples 600
+#  )
+
+  sensor(
+   fov 180
+   samples 600
+   range [ 0.0 30.0 ]
+  )
+ model(
+   color "black"
+   size [ 0.05 0.05 0.05 ]
+  )
+
+)
+
+# throw in the robot
+define chair position
+(
+  localization "gps" # put gps for no noise at all
+  size [0.80 0.70 1.0]  
+  origin [0 0 0 0 ]
+  gui_nose 0
+  drive "diff"
+  odom_error [0.1 0.1 0.0 1] # x y z theta
+)
+
+chair
+(
+ pose [ 0.2 0 0 90.0 ]  	
+ name "Wchair"
+ color "red"
+ topurg(pose [-0.23 -0.2 0 0])
+)
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1
+)
+
+# set the resolution of the underlying raytrace model in meters
+resolution 0.02
+interval_sim 100  # simulation timestep in milliseconds
+# configure the GUI window
+window
+(
+  size [ 800.000 800.000 ] # in pixels
+  scale 50   # pixels per meter
+  center [ 0  0 ]
+  rotate [ 0  0 ] 			
+  show_data 1
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "GDS"
+  bitmap "GDS_map.pgm"
+  size [37.9 47.85 2.0] #change values to the map you're using.(only first 2 values) Use gimp to determine the length and width in pixels, multiply by the resolution. See the usermanual.
+  pose [ 15.10 16.35 0 90.000 ] #change values to the map you're using. (It represents the startposition in stage)
+)

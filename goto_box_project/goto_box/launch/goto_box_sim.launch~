@@ -1,0 +1,93 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+  <arg name="use_map_topic" default="true"/>
+  <arg name="scan_topic" default="base_scan"/>
+  <arg name="no_static_map" default="false"/>
+  <arg name="base_global_planner" default="navfn/NavfnROS"/>
+  <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
+  <arg name="map" value="$(find goto_box)/stageros/goto_box_stage/UTS2.yaml"/>
+  <arg name="worldfile" value="$(find goto_box)/stageros/goto_box_stage/UTS.world"/>
+
+  <!-- Run RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find goto_box)/navigation/goto_box_nav/stage_nav_goto_box.rviz" />
+
+  <!-- Run the map server -->
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map)"/>
+
+  <!-- Run arduino serrial -->
+  <node pkg="goto_box" type="reset.py" name="reset"/>
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+	<param name="port" value="/dev/goto_box_usb"/>
+  </node>
+
+  <!-- Run stageros -->
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg worldfile)" respawn="true" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  <!-- Run sensing nodes -->
+  <node pkg="goto_box" type="pos_pros_node" name="position_processing_node" output="screen"/>
+  <node pkg="goto_box" type="loc" name="loc" output="screen"/>
+
+  <!-- Run AMCL -->
+  <node pkg="amcl" type="amcl" respawn="true" name="amcl">
+	<param name="use_map_topic" value="$(arg use_map_topic)"/>
+  	
+	<!-- Overall filter parameters -->
+	<param name="min_particles" value="50"/>
+	<param name="max_particles" value="1000"/>
+	<param name="kld_err" value="0.0001"/> 
+	<param name="kld_z" value="0.999"/>
+	<param name="update_min_d" value="0.03"/>
+	<param name="update_min_a" value="0.03"/>
+	<param name="resample_interval" value="1"/>
+	<param name="transform_tolerance" value="0.1"/>
+	<!--param name="recovery_alpha_slow" value="0.001"/-->
+	<!--param name="recovery_alpha_fast" value="0.1"/-->
+	<param name="gui_publish_rate" value="10.0"/>
+
+	<!-- Laser model parameters -->
+	<param name="laser_max_beams" value="120"/>
+	<param name="laser_z_hit" value="0.5"/>
+	<param name="laser_z_short" value="0.05"/>
+	<param name="laser_z_max" value="0.05"/>
+	<param name="laser_z_rand" value="0.5"/>
+	<param name="laser_sigma_hit" value="0.05"/>
+	<param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_likelihood_max_dist" value="4.0"/>
+	<param name="laser_model_type" value="likelihood_field"/>
+
+	<!-- Odometry model parameters -->
+  	<param name="odom_model_type" value="diff"/>
+	<param name="odom_alpha1" value="3.5"/>
+	<param name="odom_alpha2" value="3.5"/>
+	<param name="odom_alpha3" value="3.5"/>
+	<param name="odom_alpha4" value="3.5"/>
+	<param name="odom_frame_id" value="odom"/>
+	<param name="base_frame_id" value="base_link"/>
+	<param name="global_frame_id" value="map"/>
+	<param name="tf_broadcast" value="true"/>
+
+	<remap from="scan" to="$(arg scan_topic)"/>
+  </node>
+
+  <!-- arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> -->
+  <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+	<param name="base_global_planner" value="$(arg base_global_planner)"/>
+	<param name="base_local_planner" value="$(arg base_local_planner)"/>
+	<rosparam file="$(find goto_box)/navigation/goto_box_nav/base_local_planner_params_nav.yaml" command="load" />
+
+	<!-- observation sources located in costmap_common_parameters.yaml -->
+    <rosparam file="$(find goto_box)/navigation/goto_box_nav/costmap_common_params_nav.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find goto_box)/navigation/goto_box_nav/costmap_common_params_nav.yaml" command="load" ns="local_costmap" />
+
+	<!-- local costmap, need size -->
+    <rosparam file="$(find goto_box)/navigation/goto_box_nav/local_costmap_params_nav.yaml" command="load" ns="local_costmap" />
+	<param name="local_costmap/width" value="10.0"/>
+	<param name="local_costmap/height" value="10.0"/>
+	
+	<!-- Static global costmap, static map provide size -->
+    <rosparam file="$(find goto_box)/navigation/goto_box_nav/global_costmap_params_nav.yaml" command="load" ns="global_costmap" unless="$(arg no_static_map)"/>
+  </node>
+</launch>

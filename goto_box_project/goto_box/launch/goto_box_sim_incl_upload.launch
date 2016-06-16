@@ -1,0 +1,5 @@
+<launch>
+  <!-- Upload arduino code -->
+  <node pkg="goto_box" type="uploadingcodeUno.sh" name="uploadingArduinoCode"/>
+  <node pkg="goto_box" type="timed_roslaunch.sh" name="timed_roslaunch" args="3.5 $(find goto_box)/launch/goto_box_sim.launch"/>
+</launch>

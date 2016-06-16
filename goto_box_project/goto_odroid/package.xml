@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<package>
+  <name>goto_odroid</name>
+  <version>0.0.0</version>
+  <description>The goto_odroid package</description>
+  <maintainer email="Bas.Bosscher@uts.edu.au">bas</maintainer>
+  <license>TODO</license>
+  <url type="website">http://wiki.ros.org/hector_slam/Tutorials/MappingUsingLoggedData</url>
+  <url type="website">http://wiki.ros.org/hector_mapping</url>
+  <url type="website">http://wiki.ros.org/navigation/Tutorials/RobotSetup</url>
+  <url type="website">http://wiki.ros.org/stage_ros</url>
+  <url type="website">http://wiki.ros.org/move_base</url>
+  <url type="website">http://wiki.ros.org/amcl</url>
+  <url type="website">http://wiki.ros.org/navigation</url>
+  <url type="website">http://wiki.ros.org/rosserial_arduino/Tutorials/CMake</url>
+  <url type="website">http://wiki.ros.org/rosserial_arduino/Tutorials</url>
+
+  <author email="Bas.Bosscher@uts.edu.au">Jane Doe</author>
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>genmsg</buildtool_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>move_base_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>rosserial_arduino</build_depend>
+  <build_depend>rosserial_client</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>actionlib_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>move_base_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>rosserial_arduino</run_depend>
+  <run_depend>rosserial_client</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+  </export>
+</package>

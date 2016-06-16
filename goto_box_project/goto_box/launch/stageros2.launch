@@ -1,0 +1,40 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+  <arg name="no_static_map" default="false"/>
+  <arg name="worldfile" value="$(find goto_box)/config/map/goto_box_instr.world"/>
+
+  <!-- Run RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find goto_box)/config/RViz/stage_nav_instr.rviz" />
+
+  <!-- Run the navigation talker -->
+  <node pkg="goto_box" type="nav_talker_rviz" name="navigation_talker" output="screen"/>
+
+  <!-- Run stageros -->
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg worldfile)" respawn="false" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
+
+  <!-- Run hector mapping -->
+  <node pkg="hector_mapping" type="hector_mapping" name="hector_slam" output="screen">
+	<remap from="scan" to="base_scan"/>
+	<param name="pub_map_odom_transform" value="true"/>
+	<param name="map_resolution" value="0.03"/>
+	<param name="map_size" value="2500"/>
+  </node> 
+
+  <!-- Run move_base -->
+  <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+    <param name="footprint_padding" value="0.01"/>
+	<param name="controller_frequency" value="10.0"/>
+	<param name="controller_patience" value="3.0"/>
+	<param name="oscillation_timeout" value="30.0"/>
+	<param name="oscillation_distance" value="0.5"/>
+    <rosparam file="$(find goto_box)/config/navigation/goto_box_mapping/costmap_common_params_mapping.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find goto_box)/config/navigation/goto_box_mapping/costmap_common_params_mapping.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find goto_box)/config/navigation/goto_box_mapping/local_costmap_params_mapping.yaml" command="load" />
+    <rosparam file="$(find goto_box)/config/navigation/goto_box_mapping/global_costmap_params_mapping.yaml" command="load" />
+    <rosparam file="$(find goto_box)/config/navigation/goto_box_mapping/base_local_planner_params_mapping.yaml" command="load" />
+  </node>
+
+</launch>

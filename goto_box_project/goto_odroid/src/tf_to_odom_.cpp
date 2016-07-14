@@ -6,14 +6,14 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "tf_to_odom");
     ros::NodeHandle nh;
 
-    ros::Publisher odom = nh.advertise<nav_msgs::Odometry>("odom",10);
+    ros::Publisher odom = nh.advertise<nav_msgs::Odometry>("odom2",10);
 
     tf::TransformListener listener;
     ros::Rate rate(10.0);
     while(nh.ok()){
         tf::StampedTransform transform;
         try{
-            listener.lookupTransform("/map", "/odom", ros::Time(0), transform);
+            listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
         }
         catch (tf::TransformException &ex){
             ROS_ERROR("%s",ex.what());

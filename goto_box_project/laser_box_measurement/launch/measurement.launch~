@@ -1,0 +1,15 @@
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="false"/>
+  <arg name="scan_topic" default="head_scan"/>
+
+  <!-- Run position transform node -->
+  <!--node pkg="laser_box_measurement" type="ground_truth" name="ground_truth_transform" output="screen"/-->
+
+  <!-- Run laser tracking node -->
+  <node pkg="laser_box_measurement" type="pose_measurement" name="robot_pose_measurement_node" output="screen">
+    <param name="start_x" value="4.3"/>
+    <param name="start_y" value="1.2"/>
+	<param name="sradius" value="0.5"/>
+  </node>
+</launch>

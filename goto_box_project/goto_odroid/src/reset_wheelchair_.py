@@ -18,7 +18,7 @@ port2='/dev/wheelchair_mega'
 ser2 = serial.Serial()
 ser2.port=port2
 
-ser2.baudrate=115200
+ser2.baudrate=57600
 ser2.open(); ser2.close()
 
 ser2.baudrate=1200

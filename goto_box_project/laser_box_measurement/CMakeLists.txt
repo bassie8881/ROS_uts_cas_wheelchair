@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(laser_box_measurement)
+
+find_package(catkin REQUIRED COMPONENTS
+  genmsg
+  roscpp
+  rospy
+  sensor_msgs
+  std_msgs
+  tf
+)
+
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES laser_box_measurement
+#  CATKIN_DEPENDS genmsg roscpp rospy sensor_msgs std_msgs tf
+#  DEPENDS system_lib
+)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(pose_measurement src/pose_measurement.cpp)
+add_dependencies(pose_measurement ${${laser_box_measurement}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(pose_measurement ${catkin_LIBRARIES})
+
+add_executable(ground_truth src/ground_truth.cpp)
+add_dependencies(ground_truth ${${laser_box_measurement}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(ground_truth ${catkin_LIBRARIES})
+
+add_executable(pose_estimate_publisher src/pose_estimate_publisher.cpp)
+add_dependencies(pose_estimate_publisher ${${laser_box_measurement}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(pose_estimate_publisher ${catkin_LIBRARIES})
+
+add_executable(transform_measurement src/transform_measurement.cpp)
+add_dependencies(transform_measurement ${${laser_box_measurement}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(transform_measurement ${catkin_LIBRARIES})

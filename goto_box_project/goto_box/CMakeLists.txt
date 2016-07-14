@@ -102,6 +102,10 @@ add_executable(jt_profile_node src/build_joy_twist_profile.cpp)
 add_dependencies(jt_profile_node ${${goto_box}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(jt_profile_node ${catkin_LIBRARIES})
 
+add_executable(amcl_pose_to_odom src/amcl_pose_to_odom.cpp)
+add_dependencies(amcl_pose_to_odom ${${goto_box}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(amcl_pose_to_odom ${catkin_LIBRARIES})
+
  install(PROGRAMS 
    src/jt_inverse_node.py 
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

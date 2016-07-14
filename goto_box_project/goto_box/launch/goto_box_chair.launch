@@ -43,7 +43,7 @@
 
   <!-- Run sensing nodes -->
   <node pkg="goto_box" type="pos_pros_node" name="position_processing_node" output="screen"/>
-  <node pkg="goto_box" type="tf_to_odom" name="tf_to_odom" output="screen"/>
+  <node pkg="goto_box" type="amcl_pose_to_odom" name="tf_to_odom" output="screen"/>
   <node pkg="goto_box" type="loc" name="loc" output="screen"/>
   <node pkg="goto_box" type="basic_hash_node.py" name="basic_hash_node" output="screen">
 	<param name="lut" value="$(arg wc_jt_file)"/>

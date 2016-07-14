@@ -1,11 +1,11 @@
 <launch>
   <master auto="start"/>
   <param name="/use_sim_time" value="true"/>
-  <arg name="worldfile" value="$(find goto_box)/stageros/instr_stage/gds_instr.world"/>
-  <arg name="map" value="$(find goto_box)/stageros/instr_stage/gds_instr.yaml"/>
+  <arg name="worldfile" value="$(find goto_box)/config/map/goto_box_instr.world"/>
+  <arg name="map" value="$(find goto_box)/config/map/gds_instr.yaml"/>
 
   <!-- Run RViz -->
-  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find goto_box)/SLAM/stage_nav_instr.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find goto_box)/config/RViz/stage_nav_instr.rviz"/>
 
   <!-- Run navigation talker -->
   <node pkg="goto_box" type="nav_talker_rviz" name="nav_talker_rviz" output="screen"/>
@@ -63,10 +63,10 @@
 	<param name="controller_patience" value="3.0"/>
 	<param name="oscillation_timeout" value="30.0"/>
 	<param name="oscillation_distance" value="0.5"/>
-	<rosparam file="$(find goto_box)/navigation/instr_nav/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-	<rosparam file="$(find goto_box)/navigation/instr_nav/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-	<rosparam file="$(find goto_box)/navigation/instr_nav/local_costmap_params.yaml" command="load"/>
-	<rosparam file="$(find goto_box)/navigation/instr_nav/global_costmap_params2.yaml" command="load"/>
-	<rosparam file="$(find goto_box)/navigation/instr_nav/base_local_planner_params.yaml" command="load"/>
+	<rosparam file="$(find goto_box)/config/navigation/instr_nav/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+	<rosparam file="$(find goto_box)/config/navigation/instr_nav/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+	<rosparam file="$(find goto_box)/config/navigation/instr_nav/local_costmap_params.yaml" command="load"/>
+	<rosparam file="$(find goto_box)/config/navigation/instr_nav/global_costmap_params2.yaml" command="load"/>
+	<rosparam file="$(find goto_box)/config/navigation/instr_nav/base_local_planner_params.yaml" command="load"/>
   </node>
 </launch>

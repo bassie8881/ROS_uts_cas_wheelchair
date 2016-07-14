@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <!--Load URDF file-->
+    <param name="robot_description"
+           command="cat $(find data_recorder)/urdf/laser_scanner_description.urdf" />
+
+    <!--Stare robot state publisher to publish states set in the urdf-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+    <!-- Start joint_state_publisher for publishing the laser scanner orientatio joint states
+         (roll and pitch) -->
+    <arg name="gui" default="True" />
+    <param name="use_gui" value="$(arg gui)"/>
+    <node name="scanner_orientation_state_publisher" pkg="joint_state_publisher"
+          type="joint_state_publisher" required="true" clear_params="true" />
+
+<!--    Start RVIZ with configuration file-->
+    <node name="rviz" pkg="rviz" type="rviz" required="true"
+              args="--display-config $(find data_recorder)/rviz/data_recorder.rviz"/>
+</launch>

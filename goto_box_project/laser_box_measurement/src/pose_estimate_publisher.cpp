@@ -1,0 +1,49 @@
+#include <ros/ros.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_datatypes.h>
+#include <sensor_msgs/LaserScan.h>
+
+geometry_msgs::Pose pose_msg;
+sensor_msgs::LaserScan head_laser_msg, wc_laser_msg;
+
+void poseEstimateCallback(const geometry_msgs::PoseWithCovarianceStamped& msg){
+    pose_msg = msg.pose.pose;
+}
+
+void laser_cb1(const sensor_msgs::LaserScan& msg) { wc_laser_msg = msg; }
+void laser_cb2(const sensor_msgs::LaserScan& msg) { head_laser_msg = msg; }
+
+int main(int argc, char **argv){
+    ros::init(argc, argv, "robot_tracking");
+    ros::NodeHandle nh("~");
+
+    ros::Subscriber sub2 = nh.subscribe("/scan",1,laser_cb1);
+	ros::Subscriber sub3 = nh.subscribe("/base_scan",1,laser_cb2);
+    ros::Subscriber sub = nh.subscribe("/initialpose",1,poseEstimateCallback);
+	ros::Publisher pub1 = nh.advertise<sensor_msgs::LaserScan>("/head_scan", 1);
+    ros::Publisher pub2 = nh.advertise<sensor_msgs::LaserScan>("/wc_scan", 1); 
+    tf::TransformBroadcaster tfbc_;
+    geometry_msgs::TransformStamped stf_;
+    stf_.header.frame_id = "/map";
+    stf_.child_frame_id = "/static_laser";
+
+    while(ros::ok()){
+        ros::spinOnce();
+
+        stf_.header.stamp = ros::Time::now();
+        stf_.transform.translation.x = pose_msg.position.x;
+        stf_.transform.translation.y = pose_msg.position.y;
+        stf_.transform.translation.z = pose_msg.position.z;
+        stf_.transform.rotation = pose_msg.orientation;
+        tfbc_.sendTransform(stf_);
+
+        head_laser_msg.header.stamp = wc_laser_msg.header.stamp = stf_.header.stamp;
+        head_laser_msg.header.frame_id = stf_.child_frame_id;
+        pub1.publish(head_laser_msg); pub2.publish(wc_laser_msg);
+
+        ros::Duration(0.05).sleep();
+    }
+    return 0;
+}

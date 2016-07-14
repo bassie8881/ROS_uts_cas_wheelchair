@@ -79,11 +79,6 @@ target_link_libraries(joy_to_joy
    ${catkin_LIBRARIES})
 add_dependencies(joy_to_joy ${${goto_box}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(vel_to_wc src/vel_to_wc.cpp)
-target_link_libraries(vel_to_wc 
-   ${catkin_LIBRARIES})
-add_dependencies(vel_to_wc ${${goto_box}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 add_executable(tf_to_odom src/tf_to_odom.cpp)
 target_link_libraries(tf_to_odom 
    ${catkin_LIBRARIES})

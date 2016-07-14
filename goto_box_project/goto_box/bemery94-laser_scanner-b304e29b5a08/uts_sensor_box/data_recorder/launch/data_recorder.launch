@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- vim: ft=xml -->
+
+	<!-- Start each of the primary sensor nodes, if any fail should not start the main program -->
+
+	<!-- Start camera driver after delay -->
+	<!-- <node pkg="data_recorder" type="timed_roslaunch.sh" args="5 firefly_pgr firefly_pgr.launch" name="firefly_cam" output="screen"></node> -->
+
+	  <!-- nodelet manager process -->
+	  <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager"
+        	args="manager" />
+
+	<!-- camera driver nodelet -->
+	<node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
+        	args="load camera1394/driver camera_nodelet_manager">
+	        <rosparam file="$(find firefly_pgr)/launch/ffmv.yaml" />
+	</node>
+
+	<!-- arduino rosserial connection -->
+	<node pkg="rosserial_python" type="serial_node.py" name="rosserial_arduino" output="screen">
+		<param name="port" type="string" value="/dev/sb/io" />
+	</node>
+
+	<!-- IMU board -->
+	<node pkg="myahrs_plus_imu" type="myahrs_plus_imu_node" name="myahrs_imu" clear_params="true" output="screen" respawn="true"> </node>
+
+	<!-- Hokuyo Laser Scanner primary (used for localisation) -->
+	<node pkg="hokuyo_node" type="hokuyo_node" name="laser_lsl">
+		<param name="port" type="string" value="/dev/sb/ls_H1511089" />
+		<param name="min_ang" value="-1.878" />
+		<param name="max_ang" value="1.878" />
+		<param name="frame_id" type="string" value="laser_lsl" />
+		<remap from="/scan" to="/scan_lsl"/>
+	</node>
+
+	<!-- Hokuyo Laser Scanner secondary (used for mapping) -->
+	<node pkg="hokuyo_node" type="hokuyo_node" name="laser_lsm">
+		<param name="min_ang" value="-1.855" />
+		<param name="max_ang" value="1.45" />	
+		<param name="port" type="string" value="/dev/sb/ls_H1511087" />
+		<param name="frame_id" type="string" value="laser_lsm" />
+		<remap from="/scan" to="/scan_lsm"/>
+	</node>
+
+    <!--Load URDF file-->
+    <param name="robot_description"
+           command="cat $(find data_recorder)/urdf/laser_scanner_description.urdf" />
+
+    <!--Start robot state publisher to publish states set in the urdf-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+<!--    Publish TF between base_stabilized and base footprint-->
+    <node pkg="tf" type="static_transform_publisher" name="base_stab_to_footprint_broadcaster" args="0 0 1.405 0 0 0 1 base_footprint base_stabilized 20" />
+
+<!--	Broadcast TF between base_stabilized and base link -->
+    <node pkg="data_recorder" name="imu_to_base_pub" type="imu_to_base_pub" output="screen"/>
+
+<!--    Broadcast TF between corrected imu and imu, and also inertial frame to map -->
+    <node pkg="data_recorder" name="initial_tf_pub" type="initial_tf_pub" output="screen"/>
+
+	<!-- Start the data recorder node -->
+	<!--node pkg="data_recorder" type="data_recorder_node" name="data_recorder" respawn="false" clear_params="true" output="screen"> </node-->
+</launch>

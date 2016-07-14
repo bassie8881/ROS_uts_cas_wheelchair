@@ -20,7 +20,7 @@ const unsigned int data_sz2=1;
 const unsigned int data_sz3=1;
 double duration, duration2;
 double debounce_delay = 20.0;
-double debounce_delay2 = 2.0;
+double debounce_delay2 = 3.5;
 ros::Time Initialtime;
 ros::Time Initialtime2;
 
@@ -114,17 +114,17 @@ int main(int argc, char **argv)
 		set_second == true;
 		Initialtime2 = ros::Time::now();
 	    }
-
 	    if(set_second ==true){
 		duration2 = (ros::Time::now()-Initialtime2).toSec();
 		Initialtime2 = ros::Time::now();
 	    }
-
 	    if(duration2 >= debounce_delay2){
 		quantity = quantity + 1;
 	    }
-	    
-	    if(quantity >= 30){
+	    else{
+		quantity = 0;
+	    }
+	    if(quantity >= 10){
 		redled_msg.data[0] = 1;
 	        pub_LEDRED.publish(redled_msg);
         	led_msg.data[0]=0;
@@ -145,13 +145,13 @@ int main(int argc, char **argv)
                 button0 = 1;
                 odom.header.stamp = ros::Time::now();
                 odom.header.frame_id = "/map";
-                odom.pose.position.x = 5.9909;
-                odom.pose.position.y = 6.6703;
+                odom.pose.position.x = 7.5583;
+                odom.pose.position.y = -1.903;
                 odom.pose.position.z = 0.0;
                 odom.pose.orientation.x = 0.0;
                 odom.pose.orientation.y = 0.0;
-                odom.pose.orientation.z = 0.43275224201;
-                odom.pose.orientation.w = 0.90152586226;
+                odom.pose.orientation.z = 0.3;
+                odom.pose.orientation.w = 0.95;
                 pos.publish(odom);
                 ROS_INFO("SENT GOAL 1");
             }
@@ -159,13 +159,13 @@ int main(int argc, char **argv)
                 button1 = 1;
                 odom.header.stamp = ros::Time::now();
                 odom.header.frame_id = "/map";
-                odom.pose.position.x = -7.98388957977;
-                odom.pose.position.y = 31.673789978;
+                odom.pose.position.x = 1.79;
+                odom.pose.position.y = -2.33;
                 odom.pose.position.z = 0.0;
                 odom.pose.orientation.x = 0.0;
                 odom.pose.orientation.y = 0.0;
-                odom.pose.orientation.z = 0.546743102512;
-                odom.pose.orientation.w = 0.837300411952;
+                odom.pose.orientation.z = 0.996;
+                odom.pose.orientation.w = -0.08;
                 pos.publish(odom);
                 ROS_INFO("SENT GOAL 2");
             }
@@ -203,12 +203,14 @@ int main(int argc, char **argv)
             ROS_INFO("ROS FLASH GREEN COMMAND SENT");
         }
         if((status_planner==3)&&(last_reading_status_planner != 3)){ // B
-            button0, button1 = 0;
+            button0 = 0;
+	    button1 = 0;
             led_msg.data[0]=1;
             led_msg.data[1]=0;
             buzzer_msg.data[0]=1;
             pub_LED.publish(led_msg);
             pub_buzzer.publish(buzzer_msg);
+	    button0 = button1 = 0;
             ROS_INFO("ROS CONSTANT GREEN COMMAND SENT");
         }
         ros::Duration(0.01).sleep();
